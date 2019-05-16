@@ -1,9 +1,14 @@
 package my.sample.config.web;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -58,5 +63,14 @@ public class WebConfig implements WebMvcConfigurer
 	public MultipartResolver multipartResolver()
 	{
 		return new StandardServletMultipartResolver();
+	}
+	
+	//MVC请求对象格式化绑定
+	@Override
+	public void addFormatters(FormatterRegistry registry) {
+		registry.addFormatterForFieldType(String.class, new TrimStringFormatter());
+		registry.addFormatterForFieldType(LocalDate.class, new LocalDateFormatter());
+		registry.addFormatterForFieldType(LocalTime.class, new LocalTimeFormatter());
+		registry.addFormatterForFieldType(LocalDateTime.class, new LocalDateTimeFormatter());
 	}
 }
