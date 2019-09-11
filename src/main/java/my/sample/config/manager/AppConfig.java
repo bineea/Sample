@@ -2,6 +2,8 @@ package my.sample.config.manager;
 
 import javax.sql.DataSource;
 
+import org.flowable.spring.ProcessEngineFactoryBean;
+import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.AdviceMode;
@@ -117,4 +119,21 @@ public class AppConfig
 		return aspect;
 	}
 	
+	//配置流程引擎，并创建流程引擎
+	@Bean(name = "springProcessEngineConfiguration")
+	public SpringProcessEngineConfiguration initProcessEngineConfig() {
+		SpringProcessEngineConfiguration processConfig = new SpringProcessEngineConfiguration();
+		processConfig.setDataSource(initDataSource());
+		processConfig.setTransactionManager(transactionManager());
+		processConfig.setDatabaseSchemaUpdate("true");
+		processConfig.setAsyncExecutorActivate(false);
+		return processConfig;
+	}
+	
+	@Bean(name = "processEngineFactoryBean")
+	public ProcessEngineFactoryBean initProcessEngineFactory() {
+		ProcessEngineFactoryBean processEngineFactory = new ProcessEngineFactoryBean();
+		processEngineFactory.setProcessEngineConfiguration(initProcessEngineConfig());
+		return processEngineFactory;
+	}
 }
