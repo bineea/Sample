@@ -7,6 +7,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import my.sample.manager.workflow.WorkflowTestManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +33,7 @@ public class LoginController extends AbstractController
 	private UserManager userManager;
 	@Autowired
 	private RoleResourceManager roleResourceManager;
-	
+
 	@RequestMapping(value="common/login",method=RequestMethod.GET)
 	public String setupForm(HttpServletRequest request, HttpServletResponse response, Model model, 
 			@ModelAttribute("userInfoModel") UserInfoModel userInfoModel) throws IOException
