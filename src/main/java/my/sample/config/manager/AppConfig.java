@@ -2,14 +2,12 @@ package my.sample.config.manager;
 
 import javax.sql.DataSource;
 
+import org.flowable.engine.*;
 import org.flowable.spring.ProcessEngineFactoryBean;
 import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
-import org.springframework.context.annotation.AdviceMode;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -20,7 +18,10 @@ import org.springframework.transaction.aspectj.AnnotationTransactionAspect;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
+import java.util.Properties;
+
 @Configuration
+@Import({FlowableConfig.class})
 //注解开启对Spring Data JPA Repostory的支持
 @EnableJpaRepositories(basePackages ={ AppConfig.APP_NAME + ".dao.repo.jpa"}, entityManagerFactoryRef = "entityManager")
 //注解开启注解式事务的支持，通知Spring，@Transactional注解的类被事务的切面包围
@@ -42,7 +43,7 @@ public class AppConfig
 		propertiesFactory.setFileEncoding("utf-8");
 		return propertiesFactory;
 	}
-	
+
 	@Value("#{databaseProperties.driverClassName}")
 	private String driverClassName;
 	@Value("#{databaseProperties.url}")
@@ -85,6 +86,7 @@ public class AppConfig
 		// 打开PSCache，并且指定每个连接上PSCache的大小
 		dataSource.setPoolPreparedStatements(true);
 		dataSource.setMaxPoolPreparedStatementPerConnectionSize(20);
+
 		return dataSource;
 	}
 	
@@ -94,12 +96,14 @@ public class AppConfig
 		LocalContainerEntityManagerFactoryBean entityFactory = new LocalContainerEntityManagerFactoryBean();
 		entityFactory.setDataSource(initDataSource());
 		entityFactory.setPackagesToScan(new String[] {APP_NAME+".dao.entity"});
-		
+		Properties jpaProperties = new Properties();
+		jpaProperties.put("hibernate.hbm2ddl.auto","update");
+		entityFactory.setJpaProperties(jpaProperties);
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		vendorAdapter.setShowSql(false);
-		vendorAdapter.setGenerateDdl(false);
+		vendorAdapter.setGenerateDdl(true);
 		vendorAdapter.setDatabasePlatform(dialect);
-		
+
 		entityFactory.setJpaVendorAdapter(vendorAdapter);
 		return entityFactory;
 	}
@@ -118,22 +122,5 @@ public class AppConfig
 		aspect.setTransactionManager(transactionManager());
 		return aspect;
 	}
-	
-	//配置流程引擎，并创建流程引擎
-	@Bean(name = "springProcessEngineConfiguration")
-	public SpringProcessEngineConfiguration initProcessEngineConfig() {
-		SpringProcessEngineConfiguration processConfig = new SpringProcessEngineConfiguration();
-		processConfig.setDataSource(initDataSource());
-		processConfig.setTransactionManager(transactionManager());
-		processConfig.setDatabaseSchemaUpdate("true");
-		processConfig.setAsyncExecutorActivate(false);
-		return processConfig;
-	}
-	
-	@Bean(name = "processEngineFactoryBean")
-	public ProcessEngineFactoryBean initProcessEngineFactory() {
-		ProcessEngineFactoryBean processEngineFactory = new ProcessEngineFactoryBean();
-		processEngineFactory.setProcessEngineConfiguration(initProcessEngineConfig());
-		return processEngineFactory;
-	}
+
 }
