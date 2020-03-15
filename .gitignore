@@ -32,5 +32,7 @@ target/
 
 # 2019-03-01
 # all files about idea configuration
-.idea/
+.idea
+*.iws
 *.iml
+*.ipr
