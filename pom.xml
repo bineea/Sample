@@ -300,14 +300,6 @@
 		</dependency>
 
         <!-- flowable 工作流依赖 -->
-        <!-- https://mvnrepository.com/artifact/org.flowable/flowable-engine-common -->
-        <dependency>
-            <groupId>org.flowable</groupId>
-            <artifactId>flowable-engine-common</artifactId>
-            <version>6.4.2</version>
-        </dependency>
-
-        <!-- flowable 工作流依赖 -->
 		<!-- https://mvnrepository.com/artifact/org.flowable/flowable-spring -->
 		<dependency>
 		    <groupId>org.flowable</groupId>

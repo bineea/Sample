@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
@@ -23,6 +24,7 @@ import my.sample.manager.AclHandlerInterceptor;
 //配置spring-servlet.xml
 //配置注解驱动mvc 等效于 <mvc:annotation-driven/>
 @EnableWebMvc
+@EnableAspectJAutoProxy
 //注解该类为配置类
 @Configuration
 //注解需要扫描的包
