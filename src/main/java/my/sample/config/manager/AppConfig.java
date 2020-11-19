@@ -2,9 +2,6 @@ package my.sample.config.manager;
 
 import javax.sql.DataSource;
 
-import org.flowable.engine.*;
-import org.flowable.spring.ProcessEngineFactoryBean;
-import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.*;
@@ -34,7 +31,7 @@ ASPECTJ(编译时增强模式，编译时对类进行增强生成新的AOP类)�
 public class AppConfig 
 {
 	public static final String APP_NAME = "my.sample";
-	
+
 	@Bean(name = "databaseProperties")
 	public PropertiesFactoryBean loadDatabaseProperties()
 	{

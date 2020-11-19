@@ -397,7 +397,7 @@ public class WorkflowTestManagerImpl extends AbstractManager implements Workflow
         ImageIO.write(ImageIO.read(in), "png", f);
 
         Deployment deployment = repositoryService.createDeployment()
-                .name("my-testDeploy-cp")
+                .name("my-process-test-cp")
                 // 此处命名必须以.bpmn20.xml作为结尾
                 .addBpmnModel("my-testBpmnModel-cp.bpmn20.xml", model)
                 .deploy();
@@ -579,7 +579,7 @@ public class WorkflowTestManagerImpl extends AbstractManager implements Workflow
             System.out.println("Following task is available for test_user_001 task: " + task.getName());
 
             // 申领任务
-            //taskService.claim(task.getId(), "fozzie");
+            taskService.claim(task.getId(), "fozzie");
 
             System.out.println("task :" + task.toString() +
                     "task process variables :" + JsonTools.writeValueAsString(task.getProcessVariables()) +
@@ -604,7 +604,7 @@ public class WorkflowTestManagerImpl extends AbstractManager implements Workflow
             System.out.println("Following task is available for test_group_001 group: " + task.getName());
 
             // 申领任务
-            //taskService.claim(task.getId(), "fozzie");
+            taskService.claim(task.getId(), "fozzie");
         }
 
         // 验证Fozzie获取了任务

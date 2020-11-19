@@ -1,15 +1,11 @@
 package my.sample.config.manager;
 
-import org.flowable.common.engine.impl.cfg.SpringBeanFactoryProxyMap;
 import org.flowable.engine.*;
 import org.flowable.spring.ProcessEngineFactoryBean;
 import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.orm.jpa.JpaTransactionManager;
 
 import javax.sql.DataSource;
