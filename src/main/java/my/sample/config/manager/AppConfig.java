@@ -18,7 +18,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import java.util.Properties;
 
 @Configuration
-@Import({FlowableConfig.class})
+@Import({FlowableConfig.class, RedisConfig.class, KafkaConfig.class})
 //注解开启对Spring Data JPA Repostory的支持
 @EnableJpaRepositories(basePackages ={ AppConfig.APP_NAME + ".dao.repo.jpa"}, entityManagerFactoryRef = "entityManager")
 //注解开启注解式事务的支持，通知Spring，@Transactional注解的类被事务的切面包围

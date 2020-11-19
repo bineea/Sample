@@ -79,81 +79,82 @@
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-aop</artifactId>
-		    <version>5.0.2.RELEASE</version>
+		    <version>5.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-aspects</artifactId>
-		    <version>5.0.2.RELEASE</version>
+		    <version>5.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-beans</artifactId>
-		    <version>5.0.2.RELEASE</version>
+		    <version>5.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-context</artifactId>
-		    <version>5.0.2.RELEASE</version>
+		    <version>5.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-core</artifactId>
-		    <version>5.0.2.RELEASE</version>
+		    <version>5.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-jdbc</artifactId>
-		    <version>5.0.2.RELEASE</version>
+		    <version>5.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-messaging -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-messaging</artifactId>
-		    <version>5.0.2.RELEASE</version>
+		    <version>5.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-orm -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-orm</artifactId>
-		    <version>5.0.2.RELEASE</version>
+		    <version>5.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-tx</artifactId>
-		    <version>5.0.2.RELEASE</version>
+		    <version>5.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-web</artifactId>
-		    <version>5.0.2.RELEASE</version>
+		    <version>5.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-webmvc</artifactId>
-		    <version>5.0.2.RELEASE</version>
+		    <version>5.3.0</version>
 		</dependency>
 		
 		<!-- Spring jpa 依赖 -->
 		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-commons -->
 		<dependency>
-		    <groupId>org.springframework.data</groupId>
-		    <artifactId>spring-data-commons</artifactId>
-		    <version>2.0.2.RELEASE</version>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+			<version>2.4.1</version>
 		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
 		<dependency>
 		    <groupId>org.springframework.data</groupId>
 		    <artifactId>spring-data-jpa</artifactId>
-		    <version>2.0.2.RELEASE</version>
+		    <version>2.4.1</version>
 		</dependency>
 		
 		<!-- jackson 依赖 -->
@@ -315,18 +316,36 @@
             <version>6.4.2</version>
         </dependency>
 
-		<!-- redis 依赖-->
+		<!-- spring data redis 依赖-->
 		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-redis -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-redis</artifactId>
 			<version>2.4.1</version>
 		</dependency>
+
+		<!-- jedis-redis客户端依赖 -->
 		<!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
 			<version>3.3.0</version>
+		</dependency>
+
+		<!-- lettuce-redis客户端依赖 -->
+		<!-- https://mvnrepository.com/artifact/io.lettuce/lettuce-core -->
+		<dependency>
+			<groupId>io.lettuce</groupId>
+			<artifactId>lettuce-core</artifactId>
+			<version>6.0.1.RELEASE</version>
+		</dependency>
+
+		<!-- redisson 依赖 -->
+		<!-- https://mvnrepository.com/artifact/org.redisson/redisson -->
+		<dependency>
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson</artifactId>
+			<version>3.13.6</version>
 		</dependency>
 
 	</dependencies>
