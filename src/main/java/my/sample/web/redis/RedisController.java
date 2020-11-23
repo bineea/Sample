@@ -1,10 +1,8 @@
 package my.sample.web.redis;
 
+import my.sample.manager.redis.RedisOperateTestManager;
 import my.sample.web.AbstractController;
-import org.redisson.api.RBucket;
-import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,40 +15,43 @@ import java.util.concurrent.ExecutionException;
 public class RedisController extends AbstractController {
 
     @Autowired
-    private ValueOperations valueOperations;
+    private RedisOperateTestManager redisOperateTestManager;
 
-    @Autowired
-    private RedissonClient redissonClient;
-
-    @RequestMapping("simpleRedisTemple/{key}")
-    public void simpleRedisTempleTest(
+    @RequestMapping("simpleRedisTemple/set/{key}/{value}")
+    public void simpleRedisTempleTest2Set(
             HttpServletResponse response,
-            @PathVariable("key") String key) throws IOException {
-        String str = valueOperations.get(key).toString();
-        System.out.println("获取<"+key+">的value为："+str);
-        addSuccess(response, "获取<"+key+">的value为："+str);
+            @PathVariable("key") String key,
+            @PathVariable("value") String value) throws IOException {
+
+        redisOperateTestManager.setStringByRT(key, value);
+        addSuccess(response, "执行set操作后<"+key+">的value为："+value);
     }
 
-    @RequestMapping("simpleRedisson/{isSync}/{key}/{value}")
-    public void simpleRedissonTest(
+    @RequestMapping("simpleRedisTemple/get/{key}")
+    public void simpleRedisTempleTest2Get(
             HttpServletResponse response,
-            @PathVariable("isSync") boolean isSync,
+            @PathVariable("key") String key) throws IOException {
+
+        String var = redisOperateTestManager.getStringByRT(key);
+        addSuccess(response, "执行set操作后<"+key+">的value为："+var);
+    }
+
+    @RequestMapping("simpleRedisson/set/{key}/{value}")
+    public void simpleRedissonTest2Set(
+            HttpServletResponse response,
             @PathVariable("key") String key,
             @PathVariable("value") String value) throws ExecutionException, InterruptedException, IOException {
 
-        String str = null;
-        RBucket<String> bucket = redissonClient.getBucket(key);
-        System.out.println("当前RBucket的value为："+bucket.get());
-        if(isSync) {
-            //同步
-            bucket.set(value);
-            str = bucket.get();
-        } else {
-            //异步
-            bucket.setAsync(value).get();
-            bucket.getAsync().thenAccept(System.out::println);
-        }
-        System.out.println("执行set操作后，<"+key+">的RBucket的value为："+str);
+        redisOperateTestManager.setStringByRedisson(key, value);
+        addSuccess(response, "获取<"+key+">的RBucket的value为："+value);
+    }
+
+    @RequestMapping("simpleRedisson/get/{key}")
+    public void simpleRedissonTest2Get(
+            HttpServletResponse response,
+            @PathVariable("key") String key) throws ExecutionException, InterruptedException, IOException {
+
+        String str = redisOperateTestManager.getStringByRedisson(key);
         addSuccess(response, "获取<"+key+">的RBucket的value为："+str);
     }
 }

@@ -88,7 +88,8 @@ public class RedisConfig {
     public RedissonClient redissonClient() {
         Config config = new Config();
         //单节点
-        config.useSingleServer().setAddress("redis://"+hostName+":"+port);
+        config.useSingleServer()
+                .setAddress("redis://"+hostName+":"+port);
         //cluster集群
         //config.useClusterServers().addNodeAddress("redis://"+hostName+":"+port);
         return Redisson.create(config);
