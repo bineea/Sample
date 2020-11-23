@@ -23,8 +23,6 @@ public class DefaultTopicConsumerManagerImpl extends AbstractManager {
 
     @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {"default-topic"})
     public void defaultTopicConsumerListener(String record) {
-        System.out.println("当前消费者消费"
-                +"；value："+record
-        );
+        System.out.println("当前消费者消费；value："+record);
     }
 }
