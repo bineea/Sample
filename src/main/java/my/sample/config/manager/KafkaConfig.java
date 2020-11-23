@@ -1,7 +1,10 @@
 package my.sample.config.manager;
 
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.config.TopicConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.ContainerProperties;
 
@@ -48,6 +52,15 @@ public class KafkaConfig {
     @Value("#{kafkaProperties.retries}")
     private String retries;
 
+    @Value("#{kafkaProperties.defaultTopic}")
+    private String defaultTopic;
+    @Value("#{kafkaProperties.partitions}")
+    private String partitions;
+    @Value("#{kafkaProperties.replicas}")
+    private String replicas;
+
+    /********************************************消费者配置*****************************************************/
+
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory =
@@ -82,6 +95,8 @@ public class KafkaConfig {
         return props;
     }
 
+    /********************************************生产者配置*****************************************************/
+
     @Bean
     public ProducerFactory<String, String> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
@@ -104,4 +119,22 @@ public class KafkaConfig {
         return new KafkaTemplate<String, String>(producerFactory());
     }
 
+    /********************************************topic配置*****************************************************/
+    @Bean
+    public KafkaAdmin kafkaAdmin() {
+        Map<String, Object> configs = new HashMap<>();
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
+        return new KafkaAdmin(configs);
+    }
+
+    @Bean
+    public NewTopic defaultTopic() {
+        return TopicBuilder
+                .name(defaultTopic)
+                .partitions(Integer.parseInt(partitions))
+                .replicas(Integer.parseInt(replicas))
+                //设置压缩策略
+                //.config(TopicConfig.COMPRESSION_TYPE_CONFIG, "zstd")
+                .build();
+    }
 }
