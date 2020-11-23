@@ -58,8 +58,7 @@ public class KafkaConfig {
         factory.getContainerProperties().setPollTimeout(3000);
         //设置批量消费
         //factory.setBatchListener(true);
-        //设置AckModel为MANUAL或者MANUAL_IMMEDIATE时，才可以使用acknowledgment.acknowledge();
-        //同时设置ENABLE_AUTO_COMMIT_CONFIG为false
+        //设置AckModel为MANUAL或者MANUAL_IMMEDIATE，同时设置ENABLE_AUTO_COMMIT_CONFIG为false，才可以使用acknowledgment.acknowledge()实现手动提交;
         //factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }
