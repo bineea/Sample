@@ -43,12 +43,10 @@ public class KafkaConfig {
     @Value("#{kafkaProperties.concurrency}")
     private String concurrency;
 
-
     @Value("#{kafkaProperties.ackModel}")
     private String ackModel;
     @Value("#{kafkaProperties.retries}")
     private String retries;
-
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
@@ -61,7 +59,7 @@ public class KafkaConfig {
         //设置批量消费
         //factory.setBatchListener(true);
         //设置AckModel为MANUAL或者MANUAL_IMMEDIATE时，才可以使用acknowledgment.acknowledge();
-        //同时ENABLE_AUTO_COMMIT_CONFIG = false
+        //同时设置ENABLE_AUTO_COMMIT_CONFIG为false
         //factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }
@@ -78,6 +76,7 @@ public class KafkaConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        //设置自动提交
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, Boolean.valueOf(autoCommitOffset));
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, Integer.parseInt(autoCommitInterval));
         props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, Integer.parseInt(sessionTimeout));
