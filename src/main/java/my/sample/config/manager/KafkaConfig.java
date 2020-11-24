@@ -2,8 +2,10 @@ package my.sample.config.manager;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.config.TopicConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -16,8 +18,10 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.*;
+import org.springframework.kafka.listener.ConsumerAwareRebalanceListener;
 import org.springframework.kafka.listener.ContainerProperties;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,6 +77,24 @@ public class KafkaConfig {
         //factory.setBatchListener(true);
         //设置AckModel为MANUAL或者MANUAL_IMMEDIATE，同时设置ENABLE_AUTO_COMMIT_CONFIG为false，才可以使用acknowledgment.acknowledge()实现手动提交;
         //factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        //设置kafka节点rebalance监听
+        factory.getContainerProperties().setConsumerRebalanceListener(new ConsumerAwareRebalanceListener() {
+            @Override
+            public void onPartitionsRevokedBeforeCommit(Consumer<?, ?> consumer, Collection<TopicPartition> partitions) {
+                consumer.commitSync();
+                System.out.println("kafka节点发生rebalance，当前offset尚未commit时，手动触发consumer提交offset操作");
+            }
+
+            @Override
+            public void onPartitionsRevokedAfterCommit(Consumer<?, ?> consumer, Collection<TopicPartition> partitions) {
+                System.out.println("kafka节点发生rebalance，当前offset已完成commit时，触发方法onPartitionsRevokedAfterCommit");
+            }
+
+            @Override
+            public void onPartitionsAssigned(Consumer<?, ?> consumer, Collection<TopicPartition> partitions) {
+                System.out.println("kafka节点发生rebalance，分区重新分配完成后，consumer开始获取数据时，触发方法onPartitionsAssigned");
+            }
+        });
         return factory;
     }
 
