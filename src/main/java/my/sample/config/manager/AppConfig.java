@@ -1,26 +1,15 @@
 package my.sample.config.manager;
 
 import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.aspectj.AnnotationTransactionAspect;
-
 import com.alibaba.druid.pool.DruidDataSource;
 
-import java.util.Properties;
-
 @Configuration
-@Import({FlowableConfig.class, RedisConfig.class, KafkaConfig.class})
-//注解开启对Spring Data JPA Repostory的支持
-@EnableJpaRepositories(basePackages ={ AppConfig.APP_NAME + ".dao.repo.jpa"}, entityManagerFactoryRef = "entityManager")
+@Import({HibernateConfig.class, MybatisConfig.class, FlowableConfig.class})
 //注解开启注解式事务的支持，通知Spring，@Transactional注解的类被事务的切面包围
 /*AdviceMode共有两种模式：
 PROXY(代理模式，jdk动态代理和cglib动态代理)
@@ -49,8 +38,7 @@ public class AppConfig
 	private String username;
 	@Value("#{databaseProperties.password}")
 	private String password;
-	@Value("#{databaseProperties.dialect}")
-	private String dialect;
+
 	@Value("#{databaseProperties.validationQuery}")
 	private String validationQuery;
 	@Value("#{databaseProperties.databaseType}")
@@ -85,39 +73,6 @@ public class AppConfig
 		dataSource.setMaxPoolPreparedStatementPerConnectionSize(20);
 
 		return dataSource;
-	}
-	
-	@Bean(name = "entityManager")
-	public LocalContainerEntityManagerFactoryBean entityManager()
-	{
-		LocalContainerEntityManagerFactoryBean entityFactory = new LocalContainerEntityManagerFactoryBean();
-		entityFactory.setDataSource(initDataSource());
-		entityFactory.setPackagesToScan(new String[] {APP_NAME+".dao.entity"});
-		Properties jpaProperties = new Properties();
-		jpaProperties.put("hibernate.hbm2ddl.auto","update");
-		entityFactory.setJpaProperties(jpaProperties);
-		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-		vendorAdapter.setShowSql(false);
-		vendorAdapter.setGenerateDdl(true);
-		vendorAdapter.setDatabasePlatform(dialect);
-
-		entityFactory.setJpaVendorAdapter(vendorAdapter);
-		return entityFactory;
-	}
-	
-	@Bean(name = "transactionManager")
-	public JpaTransactionManager transactionManager()
-	{
-		JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(this.entityManager().getObject());
-		return transactionManager;
-	}
-	
-	@Bean(name = "annotationTransactionAspect")
-	public AnnotationTransactionAspect annotationTransactionAspect() {
-		AnnotationTransactionAspect aspect = AnnotationTransactionAspect.aspectOf();
-		aspect.setTransactionManager(transactionManager());
-		return aspect;
 	}
 
 }
