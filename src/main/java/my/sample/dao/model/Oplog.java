@@ -1,8 +1,10 @@
 package my.sample.dao.model;
 
+import my.sample.model.BaseModel;
+
 import java.time.LocalDateTime;
 
-public class Oplog {
+public class Oplog extends BaseModel {
 
     private Integer id;
     private String userId;
