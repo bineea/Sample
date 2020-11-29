@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.alibaba.druid.pool.DruidDataSource;
 
 @Configuration
-@Import({HibernateConfig.class, MybatisConfig.class, FlowableConfig.class})
+@Import({HibernateConfig.class, MybatisConfig.class, FlowableConfig.class, RedisConfig.class, KafkaConfig.class})
 //注解开启注解式事务的支持，通知Spring，@Transactional注解的类被事务的切面包围
 /*AdviceMode共有两种模式：
 PROXY(代理模式，jdk动态代理和cglib动态代理)
