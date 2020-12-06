@@ -7,6 +7,6 @@ public class DefaultTopicProducterManagerImpl extends AbstractProducterManager i
 
     @Override
     public void send(String topic, String key, String value) {
-        super.send(topic, key, value);
+//        super.send(topic, key, value);
     }
 }

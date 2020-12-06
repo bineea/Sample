@@ -54,4 +54,15 @@ public class RedisController extends AbstractController {
         String str = redisOperateTestManager.getStringByRedisson(key);
         addSuccess(response, "获取<"+key+">的RBucket的value为："+str);
     }
+
+    @RequestMapping("redRedisLock")
+    public void redRedisLockGet(HttpServletResponse response) throws IOException {
+        redisOperateTestManager.redRedisLock();
+        addSuccess(response, "测试分布式锁");
+    }
+
+    @RequestMapping("simpleRedisLock")
+    public void simpleRedisLockGet() {
+
+    }
 }

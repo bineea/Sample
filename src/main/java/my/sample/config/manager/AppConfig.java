@@ -8,8 +8,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.alibaba.druid.pool.DruidDataSource;
 
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 @Configuration
-@Import({HibernateConfig.class, MybatisConfig.class, FlowableConfig.class, RedisConfig.class, KafkaConfig.class})
+@Import({HibernateConfig.class, MybatisConfig.class, FlowableConfig.class, RedisConfig.class})
 //注解开启注解式事务的支持，通知Spring，@Transactional注解的类被事务的切面包围
 /*AdviceMode共有两种模式：
 PROXY(代理模式，jdk动态代理和cglib动态代理)
@@ -75,4 +79,10 @@ public class AppConfig
 		return dataSource;
 	}
 
+	@Bean
+	public ThreadPoolExecutor mySelfThreadPoolExecutor() {
+		return new ThreadPoolExecutor(80, 90,
+				10L, TimeUnit.MILLISECONDS,
+				new LinkedBlockingQueue<Runnable>(100));
+	}
 }

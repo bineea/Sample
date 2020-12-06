@@ -16,5 +16,8 @@ public interface RedisOperateTestManager {
 
     boolean delByRedisson(String key);
 
-    //TODO 分布式锁
+    void redRedisLock();
+
+    void simpleRedisLock();
+
 }
