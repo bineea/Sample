@@ -3,21 +3,18 @@ package my.sample.manager.redis.lock;
 import my.sample.manager.AbstractManager;
 import my.sample.model.redis.RedisLockModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisStringCommands;
 import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.data.redis.core.types.Expiration;
-import org.springframework.scripting.ScriptSource;
-import org.springframework.scripting.support.ResourceScriptSource;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -28,8 +25,12 @@ public class RedRedisLockManagerImpl extends AbstractManager implements RedisLoc
 
     @Autowired
     private RedisTemplate redisTemplate;
+
     @Autowired
     private ThreadPoolExecutor mySelfThreadPoolExecutor;
+
+    //@Autowired
+    //private RedisScript<Long> redisScript;
 
     private ThreadLocal<RedisLockModel> threadLocal = new ThreadLocal<>();
 
@@ -70,7 +71,7 @@ public class RedRedisLockManagerImpl extends AbstractManager implements RedisLoc
         }
     }
 
-    public boolean tryUnlockByRedisTemplete_1(String key, String value) {
+    public boolean tryUnlockByRedisTempleteAndRedisCallback(String key, String value) {
 
         RedisCallback<Long> redisCallback = new RedisCallback<Long>() {
             @Override
@@ -100,19 +101,21 @@ public class RedRedisLockManagerImpl extends AbstractManager implements RedisLoc
         return result == null || result <= 0 ? false : true;
     }
 
-    public void tryUnlockByRedisTemplete_2(String key, String value) {
-        String script="if redis.call(\"get\",KEYS[1])==ARGV[1] then\n" +
-                "    return redis.call(\"del\",KEYS[1])\n" +
+    public void tryUnlockByRedisTempleteAndRedisScript(String key, String value) {
+        String script=
+                "if redis.call('get',KEYS[1])==ARGV[1] then\n" +
+                "    return redis.call('del',KEYS[1])\n" +
                 "else\n" +
-                "    return -112345432\n" +
+                "    return -1\n" +
                 "end";
-        redisTemplate.execute(RedisScript.of(script, Long.class), Arrays.asList(key), Arrays.asList(value));
+        //需要指定使用StringRedisSerializer进行序列化；否则将使用RedisTemplate配置的序列化方式，则导致因序列化方式不同永远无法匹配的情况
+        redisTemplate.execute(RedisScript.of(script, Long.class), new StringRedisSerializer(), new StringRedisSerializer(), Collections.singletonList(key), value);
+        //redisTemplate.execute(redisScript, new StringRedisSerializer(), new StringRedisSerializer(), Collections.singletonList(key), value);
     }
 
     @Override
     public void redisUnlock(String key) {
-//        tryUnlockByRedisTemplete(key, threadLocal.get().getValue());
-        redisTemplate.delete(key);
+        tryUnlockByRedisTempleteAndRedisScript(key, threadLocal.get().getValue());
         threadLocal.get().getFuture().cancel(true);
         threadLocal.remove();
     }

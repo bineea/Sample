@@ -93,6 +93,9 @@ public class RedisConfig {
     public RedissonClient redissonClient() {
         Config config = new Config();
         //单节点
+        //Redis最小空闲连接数量
+        config.useSingleServer()
+                .setConnectionMinimumIdleSize(10);
         config.useSingleServer()
                 .setAddress("redis://"+hostName+":"+port);
         //cluster集群
@@ -116,7 +119,6 @@ public class RedisConfig {
         // 指定要序列化的域，field,get和set,以及修饰符范围，ANY是都有包括private和public
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         // 指定序列化输入的类型，类必须是非final修饰的，final修饰的类，比如String,Integer等会跑出异常
-        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         jacksonSeial.setObjectMapper(objectMapper);
 
@@ -151,7 +153,6 @@ public class RedisConfig {
 
     @Bean
     public RedisScript<Long> redisScript() {
-        ScriptSource scriptSource = new ResourceScriptSource(new ClassPathResource("config/redisunlock.lua"));
-        return RedisScript.of((Resource) scriptSource, Long.class);
+        return RedisScript.of(new ClassPathResource("config/redisunlock.lua"), Long.class);
     }
 }
