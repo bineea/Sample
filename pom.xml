@@ -31,7 +31,15 @@
 		<finalName>Sample</finalName>
 		<resources>
 			<resource>
+				<targetPath>config</targetPath>
 				<directory>src/main/resources/config/${environment.env}</directory>
+			</resource>
+			<resource>
+				<targetPath>dao</targetPath>
+				<directory>src/main/resources/dao</directory>
+				<includes>
+					<include>*.xml</include>
+				</includes>
 			</resource>
 		</resources>
 		<plugins>  
@@ -39,8 +47,8 @@
 	            <groupId>org.apache.maven.plugins</groupId>  
 	            <artifactId>maven-compiler-plugin</artifactId>  
 	            <configuration>  
-	                <source>1.8</source>  
-	                <target>1.8</target>  
+	                <source>11</source>
+	                <target>11</target>
 	            </configuration>  
 	        </plugin>  
 	    </plugins>
