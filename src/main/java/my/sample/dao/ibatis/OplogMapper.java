@@ -3,8 +3,10 @@ package my.sample.dao.ibatis;
 import my.sample.dao.model.Oplog;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -17,4 +19,8 @@ public interface OplogMapper {
     int insert(Oplog oplog);
 
     int insertBatch(List<Oplog> oplogList);
+
+    List<Oplog> findListByOpTime(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    List<Oplog> findListByOpTimeStr(@Param("startDateStr") String startDateStr, @Param("endDateStr") String endDateStr);
 }

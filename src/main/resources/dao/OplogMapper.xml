@@ -5,6 +5,13 @@
 
 <mapper namespace="my.sample.dao.ibatis.OplogMapper">
 
+    <resultMap type="my.sample.dao.model.Oplog" id="OplogResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="op"    column="op"    />
+        <result property="opTime"    column="op_time"    />
+    </resultMap>
+
     <insert id="insertBatch" parameterType="java.util.List">
         insert into sample_oplog(id, user_id, op, op_time)
         values
@@ -17,5 +24,23 @@
             )
         </foreach>
     </insert>
+
+
+    <select id="findListByOpTime" resultMap="OplogResult">
+        select * from sample_oplog
+        <where>
+            <if test="startDate != null"> <![CDATA[and opTime >= #{startDate}]]></if>
+            <if test="endDate != null"> <![CDATA[and opTime <= #{endDate}]]></if>
+        </where>
+    </select>
+
+    <select id="findListByOpTimeStr" resultMap="OplogResult">
+        <if test="startDate != null and startDate != ''"><!-- 开始时间检索 -->
+            AND date_format(opTime,'%y%m%d') &gt;= date_format(#{startDate},'%y%m%d')
+        </if>
+        <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
+            AND date_format(opTime,'%y%m%d') &lt;= date_format(#{endDate},'%y%m%d')
+        </if>
+    </select>
 
 </mapper>
